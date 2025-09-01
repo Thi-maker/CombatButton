@@ -13,7 +13,7 @@ local function createButton()
 
     local button = Instance.new("TextButton")
     button.Size = UDim2.new(0, 200, 0, 60)
-    button.Position = UDim2.new(0, 50, 0, 20)
+    button.Position = UDim2.new(0, 200, 0, 15)
     button.Text = "⚔️ Combat"
     button.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
     button.TextColor3 = Color3.fromRGB(255, 255, 255)

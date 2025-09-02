@@ -1,53 +1,91 @@
 local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
--- Função para criar o botão
-local function createButton()
-    -- Verifica se já existe para não duplicar
-    if playerGui:FindFirstChild("CombatGUI") then return end
-
-    local screenGui = Instance.new("ScreenGui")
-    screenGui.Parent = playerGui
-    screenGui.Name = "CombatGUI"
-
-    local button = Instance.new("TextButton")
-    button.Size = UDim2.new(0, 200, 0, 60)
-    button.Position = UDim2.new(0, 200, 0, 15)
-    button.Text = "⚔️ Combat"
-    button.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-    button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    button.Font = Enum.Font.SourceSansBold
-    button.TextScaled = true
-    button.BorderSizePixel = 0
-    button.Parent = screenGui
-
-    local uicorner = Instance.new("UICorner")
-    uicorner.CornerRadius = UDim.new(0, 15)
-    uicorner.Parent = button
-
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(0, 200, 0, 20)
-    label.Position = UDim2.new(0, 0, 1, 0)
-    label.Text = "Thi"
-    label.BackgroundTransparency = 1
-    label.TextColor3 = Color3.fromRGB(255, 255, 0)
-    label.Font = Enum.Font.SourceSansItalic
-    label.TextScaled = true
-    label.Parent = button
-
-    button.MouseButton1Click:Connect(function()
-        local character = player.Character or player.CharacterAdded:Wait()
-        local combat = character:WaitForChild("Combat")
-        local remoteEvent = combat:WaitForChild("RemoteEvent")
-        remoteEvent:FireServer()
-    end)
+-- Remove GUI antiga
+if playerGui:FindFirstChild("CombatGUI") then
+    playerGui.CombatGUI:Destroy()
 end
 
--- Cria o botão ao entrar no jogo
-createButton()
+-- Cria ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "CombatGUI"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = playerGui
 
--- Cria novamente sempre que respawna
-player.CharacterAdded:Connect(function()
-    createButton()
+-- Cria botão
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0, 200, 0, 70)
+button.Position = UDim2.new(0, 205, 0, -57)
+button.Text = "⚔️"
+button.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.Font = Enum.Font.SourceSansBold
+button.TextScaled = true
+button.BorderSizePixel = 0
+button.Parent = screenGui
+
+local uicorner = Instance.new("UICorner")
+uicorner.CornerRadius = UDim.new(0, 15)
+uicorner.Parent = button
+
+local label = Instance.new("TextLabel")
+label.Size = UDim2.new(1, 0, 0, 20)
+label.Position = UDim2.new(0, 0, 1, 0)
+label.Text = "Thi"
+label.BackgroundTransparency = 1
+label.TextColor3 = Color3.fromRGB(255, 255, 0)
+label.Font = Enum.Font.SourceSansItalic
+label.TextScaled = true
+label.Parent = button
+
+-- ARRASTE + CLIQUE SEM ERRAR
+local dragging = false
+local dragInput
+local dragStart
+local startPos
+local dragThreshold = 5 -- pixels mínimos para considerar como arraste
+local lastInputPosition = nil
+
+local function update(input)
+    local delta = input.Position - dragStart
+    button.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+                                startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+button.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = button.Position
+        dragInput = input
+        lastInputPosition = input.Position
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+button.InputChanged:Connect(function(input)
+    if dragging and input == dragInput then
+        lastInputPosition = input.Position
+        update(input)
+    end
+end)
+
+button.MouseButton1Click:Connect(function()
+    if dragStart and lastInputPosition then
+        local distance = (lastInputPosition - dragStart).Magnitude
+        if distance then
+            -- dispara apenas se não tiver arrastado
+            local character = player.Character or player.CharacterAdded:Wait()
+            local combat = character:WaitForChild("Combat")
+            local remoteEvent = combat:WaitForChild("RemoteEvent")
+            remoteEvent:FireServer()
+        end
+    end
 end)

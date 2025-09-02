@@ -16,7 +16,7 @@ screenGui.Parent = playerGui
 -- Cria botão
 local button = Instance.new("TextButton")
 button.Size = UDim2.new(0, 200, 0, 70)
-button.Position = UDim2.new(0, 205, 0, -57) -- deixei visível, já que antes estava negativo
+button.Position = UDim2.new(0, 203, 0, 20) -- deixei visível, já que antes estava negativo
 button.Text = "⚔️ Combat"
 button.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 button.TextColor3 = Color3.fromRGB(255, 255, 255)

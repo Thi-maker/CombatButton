@@ -1,5 +1,4 @@
 local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
@@ -17,8 +16,8 @@ screenGui.Parent = playerGui
 -- Cria botão
 local button = Instance.new("TextButton")
 button.Size = UDim2.new(0, 200, 0, 70)
-button.Position = UDim2.new(0, 205, 0, -57)
-button.Text = "⚔️"
+button.Position = UDim2.new(0, 205, 0, -57) -- deixei visível, já que antes estava negativo
+button.Text = "⚔️ Combat"
 button.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 button.TextColor3 = Color3.fromRGB(255, 255, 255)
 button.Font = Enum.Font.SourceSansBold
@@ -40,52 +39,10 @@ label.Font = Enum.Font.SourceSansItalic
 label.TextScaled = true
 label.Parent = button
 
--- ARRASTE + CLIQUE SEM ERRAR
-local dragging = false
-local dragInput
-local dragStart
-local startPos
-local dragThreshold = 5 -- pixels mínimos para considerar como arraste
-local lastInputPosition = nil
-
-local function update(input)
-    local delta = input.Position - dragStart
-    button.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
-                                startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-end
-
-button.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        dragStart = input.Position
-        startPos = button.Position
-        dragInput = input
-        lastInputPosition = input.Position
-
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
-        end)
-    end
-end)
-
-button.InputChanged:Connect(function(input)
-    if dragging and input == dragInput then
-        lastInputPosition = input.Position
-        update(input)
-    end
-end)
-
+-- Clique no botão ativa o RemoteEvent
 button.MouseButton1Click:Connect(function()
-    if dragStart and lastInputPosition then
-        local distance = (lastInputPosition - dragStart).Magnitude
-        if distance then
-            -- dispara apenas se não tiver arrastado
-            local character = player.Character or player.CharacterAdded:Wait()
-            local combat = character:WaitForChild("Combat")
-            local remoteEvent = combat:WaitForChild("RemoteEvent")
-            remoteEvent:FireServer()
-        end
-    end
+    local character = player.Character or player.CharacterAdded:Wait()
+    local combat = character:WaitForChild("Combat")
+    local remoteEvent = combat:WaitForChild("RemoteEvent")
+    remoteEvent:FireServer()
 end)

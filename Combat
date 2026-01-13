@@ -15,8 +15,8 @@ screenGui.Parent = playerGui
 
 -- Cria botão Combat
 local button = Instance.new("TextButton")
-button.Size = UDim2.new(0, 180, 0, 60)
-button.Position = UDim2.new(0, 203, 0, 0) -- ⬆ mais um pouquinho
+button.Size = UDim2.new(0, 190, 0, 65)
+button.Position = UDim2.new(0, 203, 0, 10) -- ⬆ mais um pouquinho
 button.Text = "Combat"
 button.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 button.TextColor3 = Color3.fromRGB(255, 255, 255)

@@ -13,11 +13,11 @@ screenGui.Name = "CombatGUI"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = playerGui
 
--- Cria botão
+-- Cria botão Combat
 local button = Instance.new("TextButton")
-button.Size = UDim2.new(0, 200, 0, 70)
-button.Position = UDim2.new(0, 203, 0, 20) -- deixei visível, já que antes estava negativo
-button.Text = "⚔️ Combat"
+button.Size = UDim2.new(0, 180, 0, 60)
+button.Position = UDim2.new(0, 203, 0, 0) -- ⬆ mais um pouquinho
+button.Text = "Combat"
 button.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 button.TextColor3 = Color3.fromRGB(255, 255, 255)
 button.Font = Enum.Font.SourceSansBold
@@ -25,14 +25,16 @@ button.TextScaled = true
 button.BorderSizePixel = 0
 button.Parent = screenGui
 
+-- Arredondamento
 local uicorner = Instance.new("UICorner")
-uicorner.CornerRadius = UDim.new(0, 15)
+uicorner.CornerRadius = UDim.new(0, 12)
 uicorner.Parent = button
 
+-- Label com nome
 local label = Instance.new("TextLabel")
-label.Size = UDim2.new(1, 0, 0, 20)
-label.Position = UDim2.new(0, 0, 1, 0)
-label.Text = "Thi"
+label.Size = UDim2.new(1, 0, 0, 18)
+label.Position = UDim2.new(0, 0, 1, -18)
+label.Text = ""
 label.BackgroundTransparency = 1
 label.TextColor3 = Color3.fromRGB(255, 255, 0)
 label.Font = Enum.Font.SourceSansItalic
